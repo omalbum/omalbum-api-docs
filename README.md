@@ -1,0 +1,1 @@
+# omalbum-api-docs
