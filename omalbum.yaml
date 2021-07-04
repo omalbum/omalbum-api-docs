@@ -114,23 +114,23 @@ paths:
               example:
                 next_problems:
                   - problem_id: 2
-                    “series”: “A”
-                    “number_in_series”: 2
+                    series: A
+                    number_in_series: 2
                     release_date: '2020-08-01T21:00:00-03:00'
                     deadline: '2020-08-02T21:00:00-03:00'
                   - problem_id: 5
-                    “series”: “A”
-                    “number_in_series”: 3
+                    series: A
+                    number_in_series: 3
                     release_date: '2020-08-01T21:00:00-03:00'
                     deadline: '2020-08-02T21:00:00-03:00'
                   - problem_id: 6
-                    “series”: “A”
-                    “number_in_series”: 4
+                    series: A
+                    number_in_series: 4
                     release_date: '2020-08-01T21:00:00-03:00'
                     deadline: '2020-08-02T21:00:00-03:00'
                   - problem_id: 7
-                    “series”: “A”
-                    “number_in_series”: 5
+                    series: A
+                    number_in_series: 5
                     release_date: '2020-08-01T21:00:00-03:00'
                     deadline: '2020-08-02T21:00:00-03:00'
               
@@ -151,8 +151,8 @@ paths:
                   - problem_id: 4
                     statement: Sea $n$ entero entonces $n^2>0$.
                     omaforos_post_id: 1234
-                    “series”: “A”
-                    “number_in_series”: 3
+                    series: A
+                    number_in_series: 3
                     tags:
                       - nivel1
                       - nivel 8
@@ -161,8 +161,8 @@ paths:
                   - problem_id: 8
                     statement: Sea $abc>0$aaaaaaa.
                     omaforos_post_id: 1234
-                    “series”: “A”
-                    “number_in_series”: 5
+                    series: A
+                    number_in_series: 5
                     tags:
                       - nivel3
                     release_date: '2020-04-01T21:00:00-03:00'
@@ -184,8 +184,8 @@ paths:
                   - problem_id: 4
                     statement: Sea $n$ entero entonces $n^2>0$.
                     omaforos_post_id: 1234
-                    “series”: “A”
-                    “number_in_series”: 1
+                    series: A
+                    number_in_series: 1
                     tags:
                       - nivel1
                       - nivel 8
@@ -194,8 +194,8 @@ paths:
                   - problem_id: 8
                     statement: Sea $abc>0$aaaaaaa.
                     omaforos_post_id: 1234
-                    “series”: “A”
-                    “number_in_series”: 1
+                    series: A
+                    number_in_series: 1
                     tags:
                       - nivel3
                     release_date: '2020-04-01T21:00:00-03:00'
@@ -203,8 +203,8 @@ paths:
                   - problem_id: 9
                     statement: Un problema de hace tiempo
                     omaforos_post_id: 1234
-                    “series”: “A”
-                    “number_in_series”: 1
+                    series: A
+                    number_in_series: 1
                     tags:
                       - nivel3
                     release_date: '2020-04-01T21:00:00-03:00'
@@ -234,8 +234,8 @@ paths:
                 problem_id: 4
                 statement: Sea $n$ entero entonces $n^2>0$.
                 omaforos_post_id: 1234
-                “series”: “A”
-                “number_in_series”: 3
+                series: A
+                number_in_series: 3
                 tags:
                   - nivel1
                   - nivel 8
@@ -323,7 +323,7 @@ paths:
               omaforos_post_id: 1234
               annotations: ''
               hint: es facil!
-              “series”: “A”
+              series: A
               tags:
                 - nivel1
               official_solution: te la debo
@@ -644,7 +644,7 @@ paths:
                     solved: true
                     solved_during_contest: false
                     date_solved: '2020-07-01T18:17:59-03:00'
-                    “series”: “A”
+                    series: A
                     tags:
                       - nivel3
                 
@@ -656,7 +656,7 @@ paths:
       tags:
       - users
       summary: Posts a problem's answer
-      description: "A user may use this endpoint to submit a problem's answer. A result is returned which may be “wait” if the problem deadline is ahead. A user may attempt a problem once during the contest. The result of the attempt is not returned during contest. TODO: Deadline sobra, sería mejor no devolverlo y usar el deadline del problema que está respondiendo."
+      description: "A user may use this endpoint to submit a problem's answer. A result is returned which may be wait if the problem deadline is ahead. A user may attempt a problem once during the contest. The result of the attempt is not returned during contest. TODO: Deadline sobra, sería mejor no devolverlo y usar el deadline del problema que está respondiendo."
       requestBody:
         description: Answer for a problem
         content:
