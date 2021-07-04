@@ -2,7 +2,6 @@ openapi: 3.0.1
 info:
   title: OMAlbum API
   description: 'The OMAlbum (https://album.oma.org.ar) API Documentation. Authors: Pablo Blanc, Sebastián Cherny, Iván Sadofschi Costa, Matías Saucedo, Carlos Miguel Soto.'
-  termsOfService: http://swagger.io/terms/
   contact:
     email: omalbum.ok@gmail.com
   license:
