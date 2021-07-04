@@ -1,0 +1,954 @@
+openapi: 3.0.1
+info:
+  title: OMAlbum API
+  description: 'The OMAlbum (https://album.oma.org.ar) API Documentation. Authors: Pablo Blanc, Sebastián Cherny, Iván Sadofschi Costa, Matías Saucedo, Carlos Miguel Soto.'
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: omalbum.ok@gmail.com
+  license:
+    name: 'AGPL-3.0'
+    url: https://www.gnu.org/licenses/agpl-3.0.en.html
+  version: 1.0.3
+externalDocs:
+  description: Find out more about OMAlbum
+  url: https://omalbum.github.io
+servers:
+- url: https://album.oma.org.ar/api/v1
+tags:
+- name: authentication
+  description: Authentication endpoint
+- name: registration
+  description: Registration endpoint
+- name: problems
+  description: Problem endpoints
+- name: admin
+  description: Admin endpoints
+- name: users
+  description: User endpoints
+paths:
+  /auth/login:
+    post:
+      tags:
+      - authentication
+      summary: Returns a token for authorized requests.
+      description: 'Request for login. Returns the token with the expiration date. The field user_name can be the user name or the email.'
+      operationId: authLogin
+      requestBody:
+        description: Login data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginData'
+            example:
+              user_name: jperez
+              password: secreto123
+        required: true
+      responses:
+        200:
+          description: Authentication OK
+          content:
+            application/jason:
+              example:
+                token: eyJhbGciOasdasda.sasdasdasdgFDN-XNJBasdasdasdC-g
+                expiration: '2020-06-28T12:00:37-03:00'
+                User:
+                  user_id: 2
+                  user_name: juan
+                  name: Juan
+                  last_name: Perez
+                  email: juan.perez@gmail.com
+        401:
+          description: Authentication failed
+          content: {}
+      x-codegen-request-body-name: body
+  /register:
+    post:
+      tags:
+      - registration
+      summary: Creates a user
+      description: TODO explain validations here 
+      requestBody:
+        description: Registration data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationData'
+            example:
+              user_name: jperez
+              password: secreto123
+              name: Juan
+              lastname: Perez
+              gender: male
+              email: juan.perez@gmail.com
+              birth_date: '2005-11-23'
+              is_student: true
+              is_teacher: false
+              school_year: 12
+              country: Argentina
+              province: Buenos Aires
+              department: La Plata
+              location: La Plata
+              school: Colegio 123
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              example:
+                user_id: 120
+              
+        400:
+          description: Bad request
+          content:  {}
+
+  /problems/next:
+    get:
+      tags:
+      - problems
+      summary: Get next problems
+      description: 'Returns the dates of the next problems. Problem tags are not returned by this endpoint.'
+      responses:
+        200:
+          description: Next problems
+          content:
+            application/json:
+              example:
+                next_problems:
+                  - problem_id: 2
+                    “series”: “A”
+                    “number_in_series”: 2
+                    release_date: '2020-08-01T21:00:00-03:00'
+                    deadline: '2020-08-02T21:00:00-03:00'
+                  - problem_id: 5
+                    “series”: “A”
+                    “number_in_series”: 3
+                    release_date: '2020-08-01T21:00:00-03:00'
+                    deadline: '2020-08-02T21:00:00-03:00'
+                  - problem_id: 6
+                    “series”: “A”
+                    “number_in_series”: 4
+                    release_date: '2020-08-01T21:00:00-03:00'
+                    deadline: '2020-08-02T21:00:00-03:00'
+                  - problem_id: 7
+                    “series”: “A”
+                    “number_in_series”: 5
+                    release_date: '2020-08-01T21:00:00-03:00'
+                    deadline: '2020-08-02T21:00:00-03:00'
+              
+
+  /problems/current:
+    get:
+      tags:
+      - problems
+      summary: Get current problems
+      description: Returns the current problems.
+      responses:
+        200:
+          description: Current problems
+          content:
+            application/json:
+              example:
+                current_problems:
+                  - problem_id: 4
+                    statement: Sea $n$ entero entonces $n^2>0$.
+                    omaforos_post_id: 1234
+                    “series”: “A”
+                    “number_in_series”: 3
+                    tags:
+                      - nivel1
+                      - nivel 8
+                    release_date: '2020-06-01T21:00:00-03:00'
+                    deadline: '2020-08-02T21:00:00-03:00'
+                  - problem_id: 8
+                    statement: Sea $abc>0$aaaaaaa.
+                    omaforos_post_id: 1234
+                    “series”: “A”
+                    “number_in_series”: 5
+                    tags:
+                      - nivel3
+                    release_date: '2020-04-01T21:00:00-03:00'
+                    deadline: '2020-08-02T21:00:00-03:00'
+                
+  /problems/all:
+    get:
+      tags:
+      - problems
+      summary: Returns all problems
+      description: Returns the problems. Alternative to GET album if the user is not logged in.
+      responses:
+        200:
+          description: All public problems
+          content:
+            application/json:
+              example:
+                all_problems:
+                  - problem_id: 4
+                    statement: Sea $n$ entero entonces $n^2>0$.
+                    omaforos_post_id: 1234
+                    “series”: “A”
+                    “number_in_series”: 1
+                    tags:
+                      - nivel1
+                      - nivel 8
+                    release_date: '2020-06-01T21:00:00-03:00'
+                    deadline: '2020-08-02T21:00:00-03:00'
+                  - problem_id: 8
+                    statement: Sea $abc>0$aaaaaaa.
+                    omaforos_post_id: 1234
+                    “series”: “A”
+                    “number_in_series”: 1
+                    tags:
+                      - nivel3
+                    release_date: '2020-04-01T21:00:00-03:00'
+                    deadline: '2020-08-02T21:00:00-03:00'
+                  - problem_id: 9
+                    statement: Un problema de hace tiempo
+                    omaforos_post_id: 1234
+                    “series”: “A”
+                    “number_in_series”: 1
+                    tags:
+                      - nivel3
+                    release_date: '2020-04-01T21:00:00-03:00'
+                    deadline: '2020-05-02T21:00:00-03:00'
+                
+
+  /problems/problem/{problem_id}:
+    get:
+      tags:
+      - problems
+      summary: Returns a problem
+      description: Returns a problem
+      parameters:
+        - name: problem_id
+          in: path
+          description: Problem ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: A problem
+          content:
+            application/json:
+              example:
+                problem_id: 4
+                statement: Sea $n$ entero entonces $n^2>0$.
+                omaforos_post_id: 1234
+                “series”: “A”
+                “number_in_series”: 3
+                tags:
+                  - nivel1
+                  - nivel 8
+                release_date: '2020-06-01T21:00:00-03:00'
+                deadline: '2020-08-02T21:00:00-03:00'
+        403:
+          description: The problem is a draft or has not been released yet.
+        404:
+          description: The problem does not exist.
+
+  /admin/problems/all:
+     get:
+      tags:
+      - admin
+      summary: Gets all problems
+      description: "An admin can use this endpoint to retrieve all problems, including drafts and problems which are not public yet."
+      responses:
+        200:
+          description: TODO
+          content:
+            application/json:
+              example:
+                all_problems:
+                  - problem_id: 2
+                    statement: Sea n entero entonces n^2>0.
+                    answer: 42
+                    omaforos_post_id: 1234
+                    annotations: ''
+                    hint: es facil!
+                    series: A
+                    number_in_series: 1
+                    tags: null
+                    official_solution: te la debo
+                    release_date: '2020-08-01T21:00:00-03:00'
+                    deadline: '2020-08-02T21:00:00-03:00'
+                    is_draft: false
+                  - problem_id: 4
+                    statement: Sea $n$ entero entonces $n^2>0$. Una ecuación centrada $$abc>0.$$ sigue el problema. Como todo problema de Ñandú alguien compra caramelos que salen \$50 y alguien mas gasta \$40 en caramelos.
+                    answer: 42
+                    omaforos_post_id: 1234
+                    annotations: ''
+                    hint: es facil!
+                    series: A
+                    number_in_series: 3
+                    tags:
+                      - nivel1
+                      - nivel 8
+                    official_solution: te la debo
+                    release_date: '2020-06-01T21:00:00-03:00'
+                    deadline: '2020-08-02T21:00:00-03:00'
+                    is_draft: false
+                  - problem_id: 5
+                    statement: Sea $abc>0$.
+                    answer: 42
+                    omaforos_post_id: 1234
+                    annotations: ''
+                    hint: es facil!
+                    series: A
+                    number_in_series: 4
+                    tags: null
+                    official_solution: te la debo
+                    release_date: '2020-08-01T21:00:00-03:00'
+                    deadline: '2020-08-02T21:00:00-03:00'
+                    is_draft: false
+        403:
+          description: The user is not an admin.
+      security:
+        - bearerAuth: []
+  
+  /admin/problem:
+     post:
+      tags:
+      - admin
+      summary: Posts a problem
+      description: "An admin can use this endpoint to schedule a problem."
+      requestBody:
+        description: New problem
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewProblem'
+            example:
+              statement: Sea $n$ entero entonces $n^2>0$.
+              answer: 42
+              omaforos_post_id: 1234
+              annotations: ''
+              hint: es facil!
+              “series”: “A”
+              tags:
+                - nivel1
+              official_solution: te la debo
+              release_date: '2020-08-01T21:00:00-03:00'
+              deadline: '2020-08-02T21:00:00-03:00'
+              is_draft: false
+              
+      responses:
+        201:
+          description: A problem statement
+          content:
+            application/json:
+              example:
+                problem_id: 15
+        400:
+          description: Validation failed
+        403:
+          description: The user is not an admin.
+                
+      security:
+        - bearerAuth: []    
+        
+  /admin/problem/{problem_id}:
+    get:
+      tags:
+      - admin
+      summary: Gets a problem (with private fields)
+      description: "An admin can use this endpoint to retrieve a problem, including the answer and other hidden fields."
+      parameters:
+        - name: problem_id
+          in: path
+          description: Problem ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: A problem statement
+          content:
+            application/json:
+              example:
+                problem_id: 4
+                statement: "Sea $n$ entero entonces $n^2>0$."
+                answer: 42
+                omaforos_post_id: 1234
+                annotations: ''
+                hint: "es facil!"
+                series: "A"
+                number_in_series: 1
+                tags:
+                  - nivel1
+                  - nivel 8
+                official_solution: te la debo
+                release_date: '2020-08-01T21:00:00-03:00'
+                deadline: '2020-08-02T21:00:00-03:00'
+                is_draft: false
+        403:
+          description: User is not admin.
+        404:
+          description: Problem not found.
+      security:
+        - bearerAuth: []
+    put:
+      tags:
+      - admin
+      summary: Modifies a problem
+      description: "An admin can use this endpoint to edit a problem. If the problem has been released it is not possible to change the release date."
+      parameters:
+        - name: problem_id
+          in: path
+          description: Problem ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: New problem
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutProblem'
+            example:
+              statement: Sea $n$ entero entonces $n^2>0$.
+              answer: 42
+              omaforos_post_id: 1234
+              annotations: ''
+              hint: es facil!
+              tags:
+                - nivel1
+              official_solution: te la debo
+              release_date: '2020-08-01T21:00:00-03:00'
+              deadline: '2020-08-02T21:00:00-03:00'
+              is_draft: false
+      responses:
+        200:
+          description: Problem was updated.
+          content:
+            application/json:
+              example:
+        400:
+          description: Validation failed.
+        404:
+          description: Problem not found.
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+      - admin
+      summary: Deletes a problem.
+      description: An admin can use this endpoint to delete a problem.
+      parameters:
+        - name: problem_id
+          in: path
+          description: Problem ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Problem was deleted.
+          content:
+            application/json:
+              example:
+      security:
+        - bearerAuth: []        
+
+  /users/{user_id}/profile:
+    get:
+      tags:
+      - users
+      summary: Returns the profile of a user
+      description: Returns the profile of a user 
+      parameters:
+        - name: user_id
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: The user's profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+              example:
+                user_id: 120
+                user_name: jperez
+                name: Juan
+                lastname: Perez
+                gender: male
+                email: juan.perez@gmail.com
+                birth_date: '2005-11-23'
+                is_student: true
+                is_teacher: false
+                school_year: 12
+                country: Argentina
+                province: Buenos Aires
+                department: La Plata
+                location: La Plata
+                school: Colegio 123
+                registration_date: '2020-07-06-19:00:00'
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not found
+          content: {}
+      security:
+        - bearerAuth: []
+    put:
+      tags:
+      - users
+      summary: Modifies a user's profile
+      description: "Updates the profile of a user. Same validations as in the register endpoint. Password change is handled by a different endpoint. Current password is required as a security measure. Each user may use this endpoint to edit their own profile. Admins may  also use it to edit the profile of any user."
+      parameters:
+        - name: user_id
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Updated profile
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserProfile'
+            example:
+              password: secreto123
+              user_name: jperez
+              email: juan.perez@gmail.com
+              name: Juan
+              last_name: Perez
+              birth_date: '2005-11-23'
+              is_student: true
+              is_teacher: false
+              school_year: 11
+              country: Argentina
+              province: Buenos Aires
+              department: La Plata
+              location: La Plata
+              school: Colegio 123
+              gender: masculino
+
+      responses:
+        200:
+          description: Profile was updated.
+          content:
+            application/json:
+              example:
+                user_id: 120
+                user_name: jperez
+                email: juan.perez@gmail.com
+                name: Juan
+                last_name: Perez
+                birth_date: '2005-11-23'
+                is_student: true
+                is_teacher: false
+                school_year: 12
+                country: Argentina
+                province: Buenos Aires
+                department: La Plata
+                location: La Plata
+                school: Colegio 123
+                gender: masculino
+                registration_date: '2020-07-06-19:00:00'
+        400:
+          description: Validation failed
+      security:
+        - bearerAuth: []              
+  /users/{user_id}/password:
+     put:
+      tags:
+      - users
+      summary: Updates the password of a user.
+      description: Updates the password of a user.
+      parameters:
+        - name: user_id
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Password change
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordChange'
+            example:
+              old_password: secreto123
+              new_password: secreto1234
+              
+      responses:
+        200:
+          description: Password was updated
+          content:
+            application/json:
+              example:
+      security:
+        - bearerAuth: []
+        
+  /users/password/reset:
+     post:
+      tags:
+      - users
+      summary: Resets a user's password
+      description: Resets the password of a user and emails the new temporary password to the user.
+      requestBody:
+        description: Password reset
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordReset'
+            example:
+              email: juan.perez@gmail.com
+              
+      responses:
+        200:
+          description: Password was reseted.
+          content:
+            application/json:
+              example:
+
+  /users/{user_id}/album:
+     get:
+      tags:
+      - users
+      summary: Gets a user's album
+      description: "Returns the album with the problems solved by the user. Only problems which are NOT current are shown."
+      parameters:
+        - name: user_id
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: The album
+          content:
+            application/json:
+              example:
+                album:
+                  - problem_id: 9
+                    attempts: 3
+                    solved: true
+                    solved_during_contest: false
+                    date_solved: '2020-07-01T18:17:59-03:00'
+                    “series”: “A”
+                    tags:
+                      - nivel3
+                
+      security:
+        - bearerAuth: []
+
+  /users/answer:
+     post:
+      tags:
+      - users
+      summary: Posts a problem's answer
+      description: "A user may use this endpoint to submit a problem's answer. A result is returned which may be “wait” if the problem deadline is ahead. A user may attempt a problem once during the contest. The result of the attempt is not returned during contest. TODO: Deadline sobra, sería mejor no devolverlo y usar el deadline del problema que está respondiendo."
+      requestBody:
+        description: Answer for a problem
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostProblemAnswer'
+            example:
+              problem_id: 123
+              answer: 100
+              
+      responses:
+        200:
+          description: TODO
+          content:
+            application/json:
+              examples:
+                correct:
+                  value:
+                    result: correct
+                    deadline: '2020-07-05:20:00:00'
+                incorrect:
+                  value:
+                    result: incorrect
+                    deadline: '2020-07-05:20:00:00'
+                wait:
+                  value:
+                    result: wait
+                    deadline: '2020-07-05:20:00:00'
+                
+                
+      security:
+        - bearerAuth: []
+  /users/{user_id}/attempts/{problem_id}:
+     get:
+      tags:
+      - users
+      summary: Gets a user's attempts to solve a problem
+      description: "Returns a user’s attempts to solve a problem. During contest the result of the submission is hidden."
+      parameters:
+        - name: user_id
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: problem_id
+          in: path
+          description: Problem ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: A user's attempts to solve a problem.
+          content:
+            application/json:
+              examples:
+                during_contest:
+                  value:
+                    problem_id: 4
+                    attempts: 1
+                    is_current_problem: true
+                    solved: false
+                    solved_during_contest: false
+                    date_solved: '0001-01-01T00:00:00Z'
+                    deadline: '2020-08-02T21:00:00-03:00'
+                    attempt_list:
+                      - attempt_date: '2020-07-09T03:57:16-03:00'
+                        result: wait
+                        given_answer: 42
+                not_during_contest:
+                  value:
+                    problem_id: 11
+                    attempts: 3
+                    is_current_problem: false
+                    solved: true
+                    solved_during_contest: false
+                    date_solved: '2020-07-11T17:34:46-03:00'
+                    deadline: '2020-07-11T17:30:00-03:00'
+                    attempt_list:
+                      - attempt_date: '2020-07-11T17:34:28-03:00'
+                        result: incorrect
+                        given_answer: 25
+                      - attempt_date: '2020-07-11T17:34:40-03:00'
+                        result: incorrect
+                        given_answer: 25
+                      - attempt_date: '2020-07-11T17:34:46-03:00'
+                        result: correct
+                        given_answer: 42
+                    
+                    
+      security:
+        - bearerAuth: []
+        
+components:
+  schemas:
+    LoginData:
+      type: object
+      properties:
+        user_name:
+          type: string
+        password:
+          type: string
+    RegistrationData:
+      type: object
+      properties:
+        user_name:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        lastname:
+          type: string
+        gender:
+          type: string
+        email:
+          type: string
+        birth_date:
+          type: string
+          format: date
+        is_student:
+          type: boolean
+        is_teacher:
+          type: boolean
+        school_year:
+          type: integer
+        country:
+          type: string
+        province:
+          type: string
+        department:
+          type: string
+        location:
+          type: string
+        school:
+          type: string
+    UserProfile:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        user_name:
+          type: string
+        name:
+          type: string
+        lastname:
+          type: string
+        gender:
+          type: string
+        email:
+          type: string
+        birth_date:
+          type: string
+          format: date
+        is_student:
+          type: boolean
+        is_teacher:
+          type: boolean
+        school_year:
+          type: integer
+        country:
+          type: string
+        province:
+          type: string
+        department:
+          type: string
+        location:
+          type: string
+        school:
+          type: string
+        registration_date:
+          type: string
+          format: date-time
+    UpdateUserProfile:
+      type: object
+      properties:
+        password:
+          type: string
+        user_name:
+          type: string
+        name:
+          type: string
+        lastname:
+          type: string
+        gender:
+          type: string
+        email:
+          type: string
+        birth_date:
+          type: string
+          format: date
+        is_student:
+          type: boolean
+        is_teacher:
+          type: boolean
+        school_year:
+          type: integer
+        country:
+          type: string
+        province:
+          type: string
+        department:
+          type: string
+        location:
+          type: string
+        school:
+          type: string
+    NewProblem:
+      type: object
+      properties:
+        statement:
+          type: string
+        answer:
+          type: integer
+        omaforos_post_id:
+          type: integer
+        annotations:
+          type: string
+        hint:
+          type: string
+        series:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        official_solution:
+          type: string
+        release_date:
+          type: string
+          format: date-time
+        deadline:
+          type: string
+          format: date-time
+        is_draft:
+          type: boolean
+          
+    PutProblem:
+      type: object
+      properties:
+        statement:
+          type: string
+        answer:
+          type: integer
+        omaforos_post_id:
+          type: integer
+        annotations:
+          type: string
+        hint:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        official_solution:
+          type: string
+        release_date:
+          type: string
+          format: date-time
+        deadline:
+          type: string
+          format: date-time
+        is_draft:
+          type: boolean
+  
+    PasswordChange:
+      type: object
+      properties:
+        old_password:
+          type: string
+        new_password:
+          type: string
+          
+    PasswordReset:
+      type: object
+      properties:
+        email:
+          type: string 
+          
+    PostProblemAnswer:
+      type: object
+      properties:
+        problem_id:
+          type: integer
+        answer:
+          type: integer
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
